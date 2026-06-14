@@ -1,0 +1,33 @@
+# ignore dependencies
+node_modules
+
+# ignore logs
+logs
+*.log
+
+# ignore IDEs and editors
+/.idea
+.vscode/*
+.vs/*
+
+# ignore the build folder and compiled output
+build
+dist
+coverage
+out
+temp
+
+# ingore yarn specifics (not Zero-Installs cache strategy)
+.pnp.*
+.yarn/*
+
+# ignore system files
+.DS_Store
+.idea
+Thumbs.db
+
+# ignore vite files
+.__mf__temp
+
+# Output of 'npm pack'
+*.tgz
