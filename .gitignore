@@ -17,6 +17,9 @@ coverage
 out
 temp
 
+# Astro
+.astro/
+
 # ingore yarn specifics (not Zero-Installs cache strategy)
 .pnp.*
 .yarn/*

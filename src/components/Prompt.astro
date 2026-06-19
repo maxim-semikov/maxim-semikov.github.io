@@ -1,0 +1,12 @@
+---
+// A shell-style prompt line: `$ cmd arg` used as a section header label.
+interface Props {
+  cmd: string;
+  arg?: string;
+}
+const { cmd, arg } = Astro.props;
+---
+
+<p class="cmd-label">
+  <span class="sigil">$</span><span>{cmd}</span>{arg && <span class="arg">{arg}</span>}
+</p>

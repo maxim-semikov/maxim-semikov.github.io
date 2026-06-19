@@ -1,0 +1,119 @@
+---
+// Home-page project card, driven entirely by projects.ts.
+import type { Project } from '../data/projects';
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const href = `${base}projects/${project.slug}/`;
+const iconSrc = project.icon ? `${base}${project.icon}` : null;
+
+const store = project.appStore;
+const storeLabel =
+  store.status === 'live'
+    ? 'On the App Store'
+    : store.status === 'coming-soon'
+      ? 'Coming soon'
+      : null;
+---
+
+<a class="card" href={href}>
+  <div class="card-head">
+    <span class="prompt">$ open {project.slug}</span>
+    {storeLabel && (
+      <span class={`store store-${store.status}`}>{storeLabel}</span>
+    )}
+  </div>
+  <div class="card-titlerow">
+    {iconSrc && (
+      <img class="card-icon" src={iconSrc} alt="" width="34" height="34" loading="lazy" />
+    )}
+    <h3 class="card-title">{project.name}</h3>
+  </div>
+  <p class="card-tagline">{project.tagline}</p>
+  <div class="tag-row card-tags">
+    {project.badges.map((b) => <span class="tag">{b}</span>)}
+  </div>
+  <span class="card-cta">cd {project.slug}/ <span class="arrow">→</span></span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px;
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    color: inherit;
+    height: 100%;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    background: var(--bg-soft);
+  }
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .prompt {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .store {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--panel-line);
+    white-space: nowrap;
+  }
+  .store-live {
+    color: var(--green);
+    border-color: rgba(156, 207, 122, 0.4);
+  }
+  .store-coming-soon {
+    color: var(--accent);
+    border-color: rgba(97, 175, 239, 0.4);
+  }
+  .card-titlerow {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .card-icon {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  .card-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--ink);
+  }
+  .card-tagline {
+    margin: 0;
+    color: var(--soft);
+    font-size: 0.92rem;
+    flex: 1;
+  }
+  .card-tags {
+    margin-top: 2px;
+  }
+  .card-cta {
+    margin-top: 6px;
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+  .card:hover .arrow {
+    margin-left: 4px;
+  }
+  .arrow {
+    transition: margin 0.15s ease;
+  }
+</style>

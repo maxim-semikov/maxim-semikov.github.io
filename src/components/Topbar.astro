@@ -1,0 +1,174 @@
+---
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  crumbs?: Crumb[];
+}
+const base = import.meta.env.BASE_URL;
+const { crumbs = [{ label: '~' }] } = Astro.props;
+
+const isHome = Astro.url.pathname === base;
+const homeLinks = isHome
+  ? [
+      { href: '#home', label: 'home' },
+      { href: '#about', label: 'about' },
+      { href: '#skills', label: 'skills' },
+      { href: '#projects', label: 'projects' },
+      { href: '#contact', label: 'contact' },
+    ]
+  : [];
+---
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <div class="brand">
+      <a class="brand-home" href={base} aria-label="home">
+        <svg
+          class="folder"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M3 7a1 1 0 0 1 1-1h5l2 2h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7z" />
+        </svg>
+      </a>
+      <span class="host-label" aria-hidden="true"><span class="host-user">maxim-semikov</span><span class="host-at">@gh-pages</span></span>
+      <nav class="crumbs" aria-label="Breadcrumb">
+        {
+          crumbs.map((c, i) => (
+            <>
+              {i > 0 && <span class="sep" aria-hidden="true">/</span>}
+              {c.href ? (
+                <a href={c.href}>{c.label}</a>
+              ) : (
+                <span class="current" aria-current="page">{c.label}</span>
+              )}
+            </>
+          ))
+        }
+      </nav>
+    </div>
+    {isHome && (
+      <nav class="topnav" aria-label="Primary">
+        {homeLinks.map((l) => <a href={l.href} data-nav={l.href}>{l.label}</a>)}
+      </nav>
+    )}
+  </div>
+</header>
+
+<style>
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    background: rgba(40, 44, 52, 0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 48px;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0; /* allow crumbs to shrink/ellipsis */
+    font-size: 0.9rem;
+  }
+  .brand-home {
+    display: inline-flex;
+    border: none;
+    color: var(--cyan);
+    flex: none;
+  }
+  .brand-home:hover {
+    color: var(--accent-bright);
+  }
+  .host-label {
+    font-size: 0.88rem;
+    white-space: nowrap;
+    flex: none;
+  }
+  .host-user {
+    color: var(--green);
+  }
+  .host-at {
+    color: var(--muted);
+  }
+  .folder {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .crumbs a {
+    color: var(--muted);
+    border: none;
+    padding: 2px 0;
+  }
+  .crumbs a:hover {
+    color: var(--accent-bright);
+  }
+  .crumbs .sep {
+    color: var(--faint);
+  }
+  .crumbs .current {
+    color: var(--ink);
+  }
+  .topnav {
+    display: flex;
+    gap: 18px;
+    margin-left: auto;
+    font-size: 0.88rem;
+  }
+  .topnav a {
+    color: var(--muted);
+    border: none;
+    padding: 2px 0;
+  }
+  .topnav a:hover,
+  .topnav a.is-active {
+    color: var(--accent-bright);
+  }
+  .topnav a.is-active {
+    border-bottom: 1px solid var(--accent);
+  }
+  /* medium screens: collapse the path to the current page only,
+     so a long breadcrumb can't collide with the nav links */
+  @media (max-width: 860px) {
+    .crumbs a,
+    .crumbs .sep {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    /* collapse the path to just the folder (home); up-nav via `cd ..` */
+    .crumbs {
+      display: none;
+    }
+    .topnav {
+      gap: 14px;
+      font-size: 0.82rem;
+    }
+    .topnav a[href='#about'],
+    .topnav a[href='#skills'] {
+      display: none;
+    }
+  }
+</style>

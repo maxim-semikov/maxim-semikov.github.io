@@ -1,0 +1,111 @@
+---
+interface Props {
+  mode?: string;
+  path?: string;
+  hint?: string;
+}
+const {
+  mode = 'NORMAL',
+  path = '~',
+  hint = '',
+} = Astro.props;
+---
+
+<footer class="statusbar" data-statusbar>
+  <span class={`mode mode-${mode.toLowerCase()}`}>{mode}</span>
+  <span class="path" data-status-path>{path}</span>
+  <span class="spacer"></span>
+  <button class="term-trigger" data-term-open type="button" aria-label="Open console">
+    <span class="tkey">~</span> console
+  </button>
+  {hint && <span class="hint">{hint}</span>}
+  <span class="pos">utf-8</span>
+  <span class="pos">100%</span>
+</footer>
+
+<style>
+  .statusbar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    display: flex;
+    align-items: stretch;
+    height: 26px;
+    font-size: 0.78rem;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--panel-line);
+    color: var(--muted);
+    user-select: none;
+  }
+  .statusbar > span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+  }
+  .mode {
+    font-weight: 700;
+    color: var(--bg);
+    background: var(--green);
+    letter-spacing: 0.08em;
+  }
+  .mode-view {
+    background: var(--accent);
+  }
+  .path {
+    color: var(--cyan);
+    background: rgba(86, 182, 194, 0.1);
+  }
+  .spacer {
+    flex: 1;
+  }
+  .hint {
+    color: var(--faint);
+  }
+  .pos {
+    border-left: 1px solid var(--panel-line-soft);
+  }
+
+  /* console trigger — rendered only on console pages (vim command line) */
+  .term-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 12px;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--panel-line-soft);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .term-trigger:hover {
+    color: var(--accent-bright);
+  }
+  .tkey {
+    border: 1px solid var(--panel-line);
+    border-radius: 4px;
+    padding: 0 5px;
+    color: var(--soft);
+    line-height: 1.5;
+  }
+  .term-trigger:hover .tkey {
+    border-color: var(--accent);
+    color: var(--accent-bright);
+  }
+
+  @media (max-width: 600px) {
+    /* keep consoles off the mobile flow */
+    .statusbar .hint,
+    .statusbar .pos,
+    .statusbar .term-trigger {
+      display: none;
+    }
+    .statusbar .path {
+      max-width: 60vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+</style>
