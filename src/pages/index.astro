@@ -1,0 +1,135 @@
+---
+import Terminal from '../layouts/Terminal.astro';
+import Prompt from '../components/Prompt.astro';
+import SkillsTree from '../components/SkillsTree.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+import { heroStack } from '../data/skills';
+import { profile } from '../data/profile';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Terminal
+  title={`${profile.name} — ${profile.role}`}
+  description="iOS & web developer. SwiftUI apps and fast static sites. Portfolio and project privacy policies."
+  canonical="/"
+>
+  <!-- ───────────────── home / hero ───────────────── -->
+  <section id="home" class="hero shell">
+    <Prompt cmd="whoami" />
+    <h1 class="hero-name">
+      <span data-typed data-text={profile.name}>{profile.name}</span><span class="cursor"></span>
+    </h1>
+    <p class="hero-role">{profile.role}</p>
+    <p class="hero-blurb">{profile.blurb}</p>
+    <div class="tag-row hero-tags">
+      {heroStack.map((s) => <span class="tag">{s}</span>)}
+    </div>
+  </section>
+
+  <!-- ───────────────── about ───────────────── -->
+  <section id="about" class="shell">
+    <Prompt cmd="cat" arg="about.md" />
+    <h2># About</h2>
+    {profile.about.map((para) => <p>{para}</p>)}
+  </section>
+
+  <!-- ───────────────── skills ───────────────── -->
+  <section id="skills" class="shell">
+    <Prompt cmd="tree" arg="skills/" />
+    <h2># Skills</h2>
+    <SkillsTree />
+  </section>
+
+  <!-- ───────────────── projects ───────────────── -->
+  <section id="projects" class="shell">
+    <Prompt cmd=" ls" arg="projects/" />
+    <h2># Projects</h2>
+    <div class="project-grid">
+      {projects.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <!-- ───────────────── contact ───────────────── -->
+  <section id="contact" class="shell">
+    <Prompt cmd="cat" arg="contact.txt" />
+    <h2># Contact</h2>
+    <ul class="contact-list">
+      <li>
+        <span class="k">email</span>
+        <a href={`mailto:${profile.contacts.email}`}>{profile.contacts.email}</a>
+      </li>
+      <li>
+        <span class="k">github</span>
+        <a href={profile.contacts.github.url} target="_blank" rel="noopener"
+          >{profile.contacts.github.url.replace('https://', '')}</a
+        >
+      </li>
+      {
+        profile.contacts.telegram && (
+          <li>
+            <span class="k">telegram</span>
+            <a href={profile.contacts.telegram.url} target="_blank" rel="noopener">
+              {profile.contacts.telegram.handle}
+            </a>
+          </li>
+        )
+      }
+    </ul>
+    <p class="eof"># EOF<span class="cursor"></span></p>
+  </section>
+</Terminal>
+
+<style>
+  .hero {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    border-bottom: 1px solid var(--panel-line-soft);
+  }
+  .hero-name {
+    margin: 0;
+  }
+  .hero-role {
+    color: var(--accent);
+    margin: 0.2em 0 1em;
+    font-size: 1.05rem;
+  }
+  .hero-blurb {
+    max-width: 620px;
+  }
+  .hero-tags {
+    margin: 22px 0 28px;
+  }
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px;
+  }
+
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .contact-list li {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  .contact-list .k {
+    color: var(--muted);
+    min-width: 90px;
+  }
+  .contact-list .k::before {
+    content: '> ';
+    color: var(--green);
+  }
+  .eof {
+    margin-top: 28px;
+    color: var(--faint);
+  }
+</style>

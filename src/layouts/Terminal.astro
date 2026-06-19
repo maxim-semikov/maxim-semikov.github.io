@@ -1,0 +1,81 @@
+---
+import '../styles/terminal.css';
+import Topbar from '../components/Topbar.astro';
+import Statusbar from '../components/Statusbar.astro';
+import { projects } from '../data/projects';
+import { skills } from '../data/skills';
+import { profile } from '../data/profile';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Status bar mode block. */
+  mode?: string;
+  /** Initial status bar path. */
+  path?: string;
+  /** Breadcrumb path segments for the topbar (last = current page). */
+  crumbs?: { label: string; href?: string }[];
+  /** Canonical path for <link rel=canonical> and OG url, e.g. '/'. */
+  canonical?: string;
+}
+
+const {
+  title,
+  description,
+  mode = 'NORMAL',
+  path = '~',
+  crumbs,
+  canonical,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonicalUrl = canonical ? site + canonical : Astro.url.href;
+
+const vfs = {
+  profile,
+  skills,
+  projects: projects.map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    badges: p.badges,
+    appStore: p.appStore,
+    privacy: p.privacy,
+    url: `${base}projects/${p.slug}/`,
+  })),
+};
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body data-base={base}>
+    <Topbar crumbs={crumbs} />
+    <main>
+      <slot />
+    </main>
+    <Statusbar mode={mode} path={path} />
+    <script type="application/json" id="vfs-data" set:html={JSON.stringify(vfs)} />
+    <script src={`${base}scripts/terminal.js`} is:inline defer />
+  </body>
+</html>

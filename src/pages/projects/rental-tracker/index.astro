@@ -1,0 +1,41 @@
+---
+import Product from '../../../layouts/Product.astro';
+import { projectBySlug } from '../../../data/projects';
+
+const project = projectBySlug('rental-tracker')!;
+const base = import.meta.env.BASE_URL;
+const shotDir = `${base}projects/rental-tracker/screenshots/`;
+const screenshots = [
+  { src: `${shotDir}main.png`, alt: 'Rental Tracker main screen' },
+  { src: `${shotDir}objects.png`, alt: 'All properties with a combined balance' },
+  { src: `${shotDir}object-card.png`, alt: 'Property card: balance, overdue days and a one-tap debt reminder' },
+  { src: `${shotDir}accruals.png`, alt: 'Monthly rent and utilities with paid / partial / debt status' },
+  { src: `${shotDir}payments.png`, alt: 'Payment history grouped by month' },
+  { src: `${shotDir}analytics.png`, alt: 'Analytics: cash flow, collection rate and accrual breakdown' },
+];
+---
+
+<Product
+  project={project}
+  screenshots={screenshots}
+>
+  <p>
+    <b>Rental Tracker</b> helps landlords keep a clear record of their rental
+    business — properties, lease agreements, scheduled charges and incoming
+    payments — without spreadsheets and without a single byte leaving the phone.
+  </p>
+  <p>
+    Everything is stored locally on your device. There is no account, no server,
+    no analytics and no tracking. Backups are export/import files that you own
+    and place wherever you like.
+  </p>
+
+  <ul slot="features" class="features">
+    <li><b>Properties &amp; tenants</b> — organize units and the people renting them.</li>
+    <li><b>Leases</b> — terms, rent amounts and durations per agreement.</li>
+    <li><b>Charges &amp; payments</b> — track what’s due and what’s been paid.</li>
+    <li><b>Payment reminders</b> — local notifications, generated on-device.</li>
+    <li><b>Manual backups</b> — export and import a file you control.</li>
+    <li><b>Offline-first</b> — no servers, no accounts, no tracking.</li>
+  </ul>
+</Product>

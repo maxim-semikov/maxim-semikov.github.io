@@ -1,32 +1,15 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Политика конфиденциальности — Учёт аренды</title>
-<style>
-  :root { --bg:#14110d; --ink:#f3ead7; --soft:#cabfa6; --muted:#8a8170; --gold:#d8b975; }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink);
-    font-family: ui-serif, Georgia, "Times New Roman", serif; line-height:1.6; }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 48px 22px 80px; }
-  .eyebrow { color:var(--gold); letter-spacing:.18em; text-transform:uppercase;
-    font-size:12px; font-family: ui-sans-serif, system-ui, sans-serif; }
-  h1 { font-size:30px; margin:.3em 0 .2em; }
-  h2 { font-size:20px; margin:1.8em 0 .4em; color:var(--ink); }
-  p, li { color:var(--soft); }
-  a { color:var(--gold); }
-  .meta { color:var(--muted); font-style:italic; font-size:15px; }
-  .disclaimer { color:var(--muted); font-style:italic; font-size:14px;
-    border-top:1px solid rgba(216,185,117,.25); margin-top:40px; padding-top:20px; }
-  hr { border:none; border-top:1px solid rgba(216,185,117,.2); margin:28px 0; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="eyebrow">Учет аренды</div>
+---
+import Privacy from '../../../layouts/Privacy.astro';
+---
+
+<Privacy
+  appName="Учет аренды (Rental Tracker)"
+  slug="rental-tracker"
+  title="Политика конфиденциальности — Учёт аренды"
+  description="Политика конфиденциальности приложения «Учёт аренды»: все данные хранятся только на вашем устройстве."
+>
   <h1>Политика конфиденциальности</h1>
-  <p class="meta">Дата вступления в силу: 5 июня 2026 г.<br>
+  <p class="meta">Дата вступления в силу: 5 июня 2026 г.<br />
   Контакт: <a href="mailto:maxim.semikov87@gmail.com">maxim.semikov87@gmail.com</a></p>
 
   <p>
@@ -118,7 +101,7 @@
   <p>
     По вопросам конфиденциальности: <a href="mailto:maxim_semikov@icloud.com">maxim_semikov@icloud.com</a>.
   </p>
-  <hr class="lang-divider">
+  <hr class="lang-divider" />
 
   <!-- ====================== ENGLISH VERSION ====================== -->
   <header style="margin-top:40px">
@@ -206,9 +189,5 @@
   <h2>11. Contact</h2>
   <p>Privacy questions: <a href="mailto:maxim_semikov@icloud.com">maxim_semikov@icloud.com</a>.</p>
 
-
-
   <p class="disclaimer">© Учет аренды. <a href="..">К странице проекта</a> · <a href="/">На главную</a></p>
-</div>
-</body>
-</html>
+</Privacy>

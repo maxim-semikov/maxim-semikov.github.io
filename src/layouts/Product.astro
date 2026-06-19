@@ -1,0 +1,360 @@
+---
+import Terminal from './Terminal.astro';
+import Prompt from '../components/Prompt.astro';
+import type { Project } from '../data/projects';
+import { profile } from '../data/profile';
+
+interface Props {
+  project: Project;
+  /** Real screenshots; when provided, replaces the placeholder tiles. */
+  screenshots?: { src: string; alt: string }[];
+  /** Number of placeholder tiles to render when no `screenshots` are given. */
+  screenshotsPlaceholderNumber?: number;
+}
+
+const { project, screenshots, screenshotsPlaceholderNumber = 4 } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const privacyHref = `${base}projects/${project.slug}/privacy/`;
+const eula =
+  'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+const store = project.appStore;
+const hasScreenshots = Array.isArray(screenshots) && screenshots.length > 0;
+const iconSrc = project.icon ? `${base}${project.icon}` : null;
+
+const monogram = project.name
+  .split(' ')
+  .map((w) => w[0])
+  .join('')
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<Terminal
+  title={`${project.name} — ${project.tagline}`}
+  description={project.description}
+  canonical={`/projects/${project.slug}/`}
+  crumbs={[
+    { label: '~', href: base },
+    { label: 'projects', href: `${base}#projects` },
+    { label: project.slug },
+  ]}
+  path={`~/projects/${project.slug}`}
+>
+  <article class="shell product">
+    <!-- ── header ── -->
+    <header class="phead">
+      {
+        iconSrc ? (
+          <img
+            class="icon icon-img"
+            src={iconSrc}
+            alt={`${project.name} app icon`}
+            width="76"
+            height="76"
+          />
+        ) : (
+          <div class="icon" aria-hidden="true">{monogram}</div>
+        )
+      }
+      <div class="phead-body">
+        <h1 class="pname">{project.name}</h1>
+        <p class="ptag">{project.tagline}</p>
+        <div class="tag-row">
+          {project.badges.map((b) => <span class="tag">{b}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <!-- ── readme ── -->
+    <section class="block">
+      <Prompt cmd=" cat" arg="README.md" />
+      <div class="prose">
+        <slot />
+      </div>
+    </section>
+
+    <!-- ── screenshots ── -->
+    <section class="block">
+      <Prompt cmd=" ls" arg="screenshots/" />
+      <div class="shots-wrap">
+        <button class="shot-nav prev" type="button" data-shots-prev aria-label="Previous screenshot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+        </button>
+        <button class="shot-nav next" type="button" data-shots-next aria-label="Next screenshot">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+        </button>
+        <div class="shots" data-shots role="list" aria-label="Screenshots">
+          {
+            hasScreenshots
+              ? screenshots!.map((s) => (
+                  <img
+                    class="shot-img"
+                    role="listitem"
+                    src={s.src}
+                    alt={s.alt}
+                    loading="lazy"
+                    decoding="async"
+                    width="280"
+                    height="606"
+                  />
+                ))
+              : Array.from({ length: screenshotsPlaceholderNumber }).map((_, i) => (
+                  <div class="shot" role="listitem">
+                    <span class="shot-label">{String(i + 1).padStart(2, '0')}.png</span>
+                    <span class="shot-note">screenshot pending</span>
+                  </div>
+                ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ── features ── -->
+    <section id="features" class="block">
+      <Prompt cmd=" cat" arg="features.md" />
+      <slot name="features" />
+    </section>
+
+    <!-- ── download / CTA ── -->
+    <section id="download" class="block cta">
+      <Prompt cmd=" open" arg="appstore" />
+      <div class="cta-row">
+        {
+          store.status === 'live' ? (
+            <a class="btn btn-primary" href={store.url} target="_blank" rel="noopener">
+              ↓ Download on the App Store
+            </a>
+          ) : store.status === 'coming-soon' ? (
+            <span class="btn" aria-disabled="true">↓ Download on the App Store — Coming soon</span>
+          ) : (
+            <span class="btn" aria-disabled="true">Not distributed on the App Store</span>
+          )
+        }
+        <a class="btn" href={privacyHref}>Privacy Policy →</a>
+      </div>
+      <p class="legal">
+        <a href={eula} target="_blank" rel="noopener">Apple Standard EULA</a>
+        · Questions: <a href={`mailto:${profile.contacts.email}`}>{profile.contacts.email}</a>
+      </p>
+    </section>
+  </article>
+</Terminal>
+
+<style>
+  .product {
+    padding-top: 18px;
+    /* width inherited from .shell (980px) so it matches the home page;
+       long prose stays readable via the global `p { max-width }` cap */
+  }
+  .phead {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin: 24px 0 12px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--panel-line-soft);
+  }
+  .icon {
+    flex: none;
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--bg);
+    background: linear-gradient(150deg, var(--accent-bright), var(--accent));
+    box-shadow: var(--shadow);
+  }
+  .icon-img {
+    object-fit: cover;
+    background: none;
+  }
+  .pname {
+    margin: 0 0 0.15em;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+  }
+  .ptag {
+    margin: 0 0 12px;
+    color: var(--soft);
+  }
+  .block {
+    padding: 34px 0;
+    border-bottom: 1px solid var(--panel-line-soft);
+  }
+  .prose :global(p) {
+    margin: 0 0 1em;
+  }
+  .prose :global(ul) {
+    color: var(--soft);
+    padding-left: 1.3em;
+  }
+  .prose :global(li) {
+    margin: 0.3em 0;
+  }
+
+  /* screenshots — full slider: themed native scroll + arrow buttons */
+  .shots-wrap {
+    position: relative;
+  }
+  .shot-nav {
+    position: absolute;
+    top: calc(50% - 6px); /* center on the image area, above scrollbar */
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--panel-line);
+    background: rgba(33, 37, 43, 0.82);
+    color: var(--ink);
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.6);
+    transition: opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .shot-nav svg {
+    width: 20px;
+    height: 20px;
+  }
+  .shot-nav:hover {
+    background: var(--bg-soft);
+    border-color: var(--accent);
+    color: var(--accent-bright);
+  }
+  .shot-nav.prev {
+    left: 6px;
+  }
+  .shot-nav.next {
+    right: 6px;
+  }
+  .shot-nav[disabled] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* touch devices: rely on swipe, hide arrows */
+  @media (hover: none) {
+    .shot-nav {
+      display: none;
+    }
+  }
+
+  .shots {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--faint) transparent;
+  }
+  .shots::-webkit-scrollbar {
+    height: 8px;
+  }
+  .shots::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .shots::-webkit-scrollbar-thumb {
+    background: var(--faint);
+    border-radius: 999px;
+  }
+  .shots:hover::-webkit-scrollbar-thumb {
+    background: var(--muted);
+  }
+  .shot {
+    flex: none;
+    width: 168px;
+    height: 364px;
+    border-radius: 22px;
+    border: 1px dashed var(--panel-line);
+    background:
+      repeating-linear-gradient(
+        45deg,
+        rgba(97, 175, 239, 0.04) 0,
+        rgba(97, 175, 239, 0.04) 10px,
+        transparent 10px,
+        transparent 20px
+      ),
+      var(--panel);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    scroll-snap-align: start;
+  }
+  .shot-label {
+    color: var(--cyan);
+    font-size: 0.85rem;
+  }
+  .shot-note {
+    color: var(--faint);
+    font-size: 0.75rem;
+  }
+  /* real screenshots */
+  .shot-img {
+    flex: none;
+    width: 224px;
+    height: auto;
+    aspect-ratio: 1290 / 2796;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+    scroll-snap-align: start;
+  }
+  @media (max-width: 600px) {
+    .shot-img {
+      width: 180px;
+    }
+  }
+
+  /* feature list (passed via slot) */
+  :global(.features) {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  :global(.features li) {
+    padding-left: 1.6em;
+    position: relative;
+    color: var(--soft);
+  }
+  :global(.features li)::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+  }
+  :global(.features b) {
+    color: var(--ink);
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .legal {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  @media (max-width: 600px) {
+    .phead {
+      gap: 14px;
+    }
+    .icon {
+      width: 60px;
+      height: 60px;
+      font-size: 1.3rem;
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+import Product from '../../../layouts/Product.astro';
+import { projectBySlug } from '../../../data/projects';
+
+const project = projectBySlug('psychomatrix')!;
+---
+
+<Product
+  project={project}
+  screenshotsPlaceholderNumber={4}
+>
+  <p>
+    <b>AI Psychomatrix</b> turns a birth date into a Pythagorean square
+    (psychomatrix) and lays out the classic numerological breakdown, then
+    optionally generates a personalized, AI-written reading on top of it.
+  </p>
+  <p>
+    Profiles you create — names and birth dates — are stored locally on your
+    device. When you request an AI reading, only the birth date and the computed
+    matrix figures are sent for one-off text generation; the profile name is
+    never transmitted. Readings are cached on-device for free re-reading.
+  </p>
+
+  <ul slot="features" class="features">
+    <li><b>Pythagorean square</b> — computed instantly from any birth date.</li>
+    <li><b>Numerology breakdown</b> — built-in interpretation of each figure.</li>
+    <li><b>AI reading</b> — personalized text generated on request.</li>
+    <li><b>Local profiles</b> — names &amp; dates stay on your device.</li>
+    <li><b>Cached results</b> — re-read generated readings for free, offline.</li>
+    <li><b>No ad tracking</b> — no third-party analytics or ad SDKs.</li>
+  </ul>
+</Product>
