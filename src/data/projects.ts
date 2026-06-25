@@ -27,15 +27,15 @@ export const projects: readonly Project[] = [
     icon: 'projects/rental-tracker/icon.png',
   },
   {
-    slug: 'psychomatrix',
-    name: 'AI Psychomatrix',
-    description: 'AI Psychomatrix — an iOS app that builds a Pythagorean square from a birth date and generates an AI-powered reading.',
+    slug: 'psychocode',
+    name: 'Psychocode',
+    description: 'Psychocode — an iOS app that builds a Pythagorean square from a birth date and generates an AI-powered reading.',
     tagline:
       'Builds a Pythagorean square from a birth date and generates an AI-powered reading.',
     badges: ['iOS', 'SwiftUI', 'AI'],
     appStore: { status: 'coming-soon' },
     privacy: true,
-    icon: 'projects/psychomatrix/icon.png'
+    icon: 'projects/psychocode/icon.png'
   },
 ];
 
