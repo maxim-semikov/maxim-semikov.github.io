@@ -67,7 +67,8 @@ const homeLinks = isHome
     position: fixed;
     inset: 0 0 auto 0;
     z-index: 50;
-    background: rgba(40, 44, 52, 0.82);
+    background: rgba(40, 44, 52, 0.95);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--panel-line);
   }
@@ -160,6 +161,10 @@ const homeLinks = isHome
   @media (max-width: 600px) {
     /* collapse the path to just the folder (home); up-nav via `cd ..` */
     .crumbs {
+      display: none;
+    }
+    /* hide the host label so the right-hand nav can't collide with it */
+    .host-label {
       display: none;
     }
     .topnav {
