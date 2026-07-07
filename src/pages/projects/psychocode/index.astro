@@ -3,11 +3,22 @@ import Product from '../../../layouts/Product.astro';
 import { projectBySlug } from '../../../data/projects';
 
 const project = projectBySlug('psychocode')!;
+const base = import.meta.env.BASE_URL;
+const shotDir = `${base}projects/psychocode/screenshots/`;
+const screenshots = [
+  { src: `${shotDir}Slice 1.png`, alt: 'Psychocode home screen: pick a birth date and calculate the matrix' },
+  { src: `${shotDir}Slice 2.png`, alt: 'Full breakdown screen with a personalized AI-written reading' },
+  { src: `${shotDir}Slice 3.png`, alt: 'Strengths and growth areas summary from the full reading' },
+  { src: `${shotDir}Slice 4.png`, alt: 'Birth date picker for calculating the Pythagorean square' },
+  { src: `${shotDir}Slice 5.png`, alt: 'Profiles screen listing saved birth dates' },
+  { src: `${shotDir}Slice 6.png`, alt: 'Computed matrix with a free first reading unlocked' },
+  { src: `${shotDir}Slice 7.png`, alt: 'Full reading with career, relationships and deeper self insight tabs' },
+];
 ---
 
 <Product
   project={project}
-  screenshotsPlaceholderNumber={4}
+  screenshots={screenshots}
 >
   <p>
     <b>Psychocode</b> turns a birth date into a Pythagorean square
