@@ -33,7 +33,7 @@ export const projects: readonly Project[] = [
     tagline:
       'Builds a Pythagorean square from a birth date and generates an AI-powered reading.',
     badges: ['iOS', 'SwiftUI', 'AI'],
-    appStore: { status: 'coming-soon' },
+    appStore: { status: 'live', url: 'https://apps.apple.com/kz/app/%D0%BF%D1%81%D0%B8%D1%85%D0%BE%D0%BA%D0%BE%D0%B4/id6784379545' },
     privacy: true,
     icon: 'projects/psychocode/icon.png'
   },
